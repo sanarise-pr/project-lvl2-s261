@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import program from 'commander';
+import commander from 'commander';
 import { version } from '../../package.json';
 
 const processAction = (firstConfig, secondConfig) => {
   console.log('args:', firstConfig, secondConfig);
-  console.log('opts:', program.format);
+  console.log('opts:', commander.format);
 };
 
-program
+commander
   .description('Compares two configuration files and shows a difference.')
   .option('-f, --format [type]', 'Output format')
   .version(version)
@@ -16,8 +16,6 @@ program
   .action(processAction)
   .parse(process.argv);
 
-console.log(process.argv);
-
 if (!process.argv.slice(2).length) {
-  program.help();
+  commander.help();
 }
