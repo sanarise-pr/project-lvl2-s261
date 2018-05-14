@@ -1,0 +1,38 @@
+{
+  "name": "sanarise-pr-gen-diff",
+  "version": "0.1.0",
+  "description": "Hexlet diff generator",
+  "main": "index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "babel-node": "babel-node",
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "eslint": "eslint",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanarise-pr/project-lvl2-s261.git"
+  },
+  "keywords": [],
+  "author": "Aleksandr Chupakhin <sanarise@yandex.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sanarise-pr/project-lvl2-s261/issues"
+  },
+  "homepage": "https://github.com/sanarise-pr/project-lvl2-s261#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-babel": "^5.1.0",
+    "eslint-plugin-import": "^2.11.0"
+  }
+}
