@@ -16,6 +16,6 @@ commander
   .action(processAction)
   .parse(process.argv);
 
-if (!process.argv.slice(2).length) {
+if (!commander.args.length) {
   commander.help();
 }
