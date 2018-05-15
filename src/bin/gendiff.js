@@ -2,10 +2,10 @@
 
 import commander from 'commander';
 import { version } from '../../package.json';
+import genDiff from '..';
 
 const processAction = (firstConfig, secondConfig) => {
-  console.log('args:', firstConfig, secondConfig);
-  console.log('opts:', commander.format);
+  console.log(genDiff(firstConfig, secondConfig));
 };
 
 commander
