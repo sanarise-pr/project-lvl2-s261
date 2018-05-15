@@ -1,9 +1,14 @@
 import fs from 'fs';
+import { extname } from 'path';
 import _ from 'lodash';
+import getParser from './parsers';
 
-const readAndParseJsonSync = (path) => {
-  const json = fs.readFileSync(path, 'utf-8');
-  return JSON.parse(json);
+const readAndParseSync = (path) => {
+  const rawData = fs.readFileSync(path, 'utf-8');
+  const pathExtName = extname(path);
+  const parse = getParser(pathExtName);
+
+  return parse(rawData);
 };
 
 const buildReport = (changeTable, before, after) => {
@@ -49,8 +54,8 @@ const buildChangeTable = (before, after) => {
 };
 
 const genDiff = (beforePath, afterPath) => {
-  const before = readAndParseJsonSync(beforePath);
-  const after = readAndParseJsonSync(afterPath);
+  const before = readAndParseSync(beforePath);
+  const after = readAndParseSync(afterPath);
   const changeTable = buildChangeTable(before, after);
 
   return buildReport(changeTable, before, after);
