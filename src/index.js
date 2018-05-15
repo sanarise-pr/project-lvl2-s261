@@ -40,9 +40,9 @@ const buildChangeTable = (before, after) => {
         _.has(before, key) && _.has(after, key) && before[key] !== after[key],
     },
   ];
-  const keySet = new Set([...Object.keys(before), ...Object.keys(after)]);
+  const keys = _.union(_.keys(before), _.keys(after));
 
-  return Array.from(keySet).map((key) => {
+  return keys.map((key) => {
     const { status } = changeMapping.find(rec => rec.test(key));
     return [key, status];
   });
