@@ -6,20 +6,27 @@ const buildFixturePath = fileName =>
   path.join(__dirname, '__fixtures__', fileName);
 
 describe('genDiff', () => {
-  it('JSON format', () => {
-    const fixtures = ['before.json', 'after.json', 'expected-diff'];
-    const [beforePath, afterPath, expectedDiffPath] = fixtures.map(buildFixturePath);
-    const expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
+  describe('valid formats', () => {
+    let expectedDiff;
 
-    expect(genDiff(beforePath, afterPath)).toEqual(expectedDiff);
-  });
+    beforeAll(() => {
+      const expectedDiffPath = buildFixturePath('expected-diff');
+      expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
+    });
 
-  it('YAML format', () => {
-    const fixtures = ['before.yml', 'after.yml', 'expected-diff'];
-    const [beforePath, afterPath, expectedDiffPath] = fixtures.map(buildFixturePath);
-    const expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
+    it('JSON format', () => {
+      const fixtures = ['before.json', 'after.json'];
+      const [beforePath, afterPath] = fixtures.map(buildFixturePath);
 
-    expect(genDiff(beforePath, afterPath)).toEqual(expectedDiff);
+      expect(genDiff(beforePath, afterPath)).toEqual(expectedDiff);
+    });
+
+    it('YAML format', () => {
+      const fixtures = ['before.yml', 'after.yml'];
+      const [beforePath, afterPath] = fixtures.map(buildFixturePath);
+
+      expect(genDiff(beforePath, afterPath)).toEqual(expectedDiff);
+    });
   });
 
   it('unknown format throws error', () => {
