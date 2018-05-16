@@ -1,9 +1,11 @@
-import { load } from 'js-yaml';
+import yaml from 'js-yaml';
+import ini from 'ini';
 
 const parsers = {
-  '.yml': load,
-  '.yaml': load,
+  '.yml': yaml.load,
+  '.yaml': yaml.load,
   '.json': JSON.parse,
+  '.ini': ini.parse,
 };
 
 export default (ext) => {

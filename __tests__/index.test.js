@@ -27,6 +27,13 @@ describe('genDiff', () => {
 
       expect(genDiff(beforePath, afterPath)).toEqual(expectedDiff);
     });
+
+    it('INI format', () => {
+      const fixtures = ['before.ini', 'after.ini'];
+      const [beforePath, afterPath] = fixtures.map(buildFixturePath);
+
+      expect(genDiff(beforePath, afterPath)).toEqual(expectedDiff);
+    });
   });
 
   it('unknown format throws error', () => {
