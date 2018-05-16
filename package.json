@@ -2,7 +2,7 @@
   "name": "sanarise-pr-gen-diff",
   "version": "0.4.0",
   "description": "Hexlet diff generator",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
   },
