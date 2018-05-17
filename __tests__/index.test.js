@@ -14,7 +14,7 @@ describe('genDiff', () => {
       expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
     });
 
-    it.only('JSON format', () => {
+    it('JSON format', () => {
       const fixtures = ['before.json', 'after.json'];
       const [beforePath, afterPath] = fixtures.map(buildFixturePath);
 
