@@ -36,7 +36,8 @@ const createAstMapping = (before, after) => [
       _.has(before, key) && _.has(after, key) && before[key] !== after[key],
     build: key => ({
       type: 'changed',
-      value: [before[key], after[key]],
+      oldValue: before[key],
+      newValue: after[key],
     }),
   },
 ];

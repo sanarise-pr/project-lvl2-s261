@@ -22,8 +22,8 @@ const astToStringTree = (ast) => {
     added: ({ key, value }) => stringifyValue(value, key, '+ '),
     removed: ({ key, value }) => stringifyValue(value, key, '- '),
     unchanged: ({ key, value }) => stringifyValue(value, key, spacer),
-    changed: ({ key, value }) =>
-      [].concat(stringifyValue(value[0], key, '- '), stringifyValue(value[1], key, '+ ')),
+    changed: ({ key, oldValue, newValue }) =>
+      [].concat(stringifyValue(oldValue, key, '- '), stringifyValue(newValue, key, '+ ')),
     nested: ({ key, children }) => [`${spacer}${key}: {`, iter(children), `${spacer}}`],
   };
 
