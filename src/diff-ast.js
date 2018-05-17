@@ -17,8 +17,7 @@ const createAstMapping = (before, after) => [
     }),
   },
   {
-    test: key =>
-      _.isPlainObject(before[key]) && _.isPlainObject(after[key]),
+    test: key => _.isPlainObject(before[key]) && _.isPlainObject(after[key]),
     build: key => ({
       type: 'nested',
       children: buildDiffAst(before[key], after[key]),
