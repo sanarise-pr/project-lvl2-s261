@@ -1,11 +1,11 @@
 import _ from 'lodash';
 
 const spacer = '  ';
-const makeIndent = level => spacer.repeat(level * 2);
-const makeMarkedIndent = (level, mark) => `${spacer.repeat((level * 2) - 1)}${mark} `;
+const calculateIndent = level => spacer.repeat(level * 2);
+const calculateMarkedIndent = (level, mark) => `${spacer.repeat((level * 2) - 1)}${mark} `;
 
 const stringifyValue = (value, key, deepness, mark) => {
-  const indent = mark ? makeMarkedIndent(deepness, mark) : makeIndent(deepness);
+  const indent = mark ? calculateMarkedIndent(deepness, mark) : calculateIndent(deepness);
   if (!_.isPlainObject(value)) {
     return `${indent}${key}: ${value}`;
   }
@@ -16,7 +16,7 @@ const stringifyValue = (value, key, deepness, mark) => {
   }
 
   const nestedStrings = keys.map(k => stringifyValue(value[k], k, deepness + 1));
-  return [`${indent}${key}: {`, nestedStrings.join('\n'), `${makeIndent(deepness)}}`].join('\n');
+  return [`${indent}${key}: {`, nestedStrings.join('\n'), `${calculateIndent(deepness)}}`].join('\n');
 };
 
 const mapping = {
@@ -26,7 +26,7 @@ const mapping = {
   changed: ({ key, oldValue, newValue }, deepness) =>
     [stringifyValue(oldValue, key, deepness, '-'), stringifyValue(newValue, key, deepness, '+')],
   nested: ({ key, children }, deepness, stringifyAst) => {
-    const indent = makeIndent(deepness);
+    const indent = calculateIndent(deepness);
     return [`${indent}${key}: {`, stringifyAst(children, deepness + 1), `${indent}}`];
   },
 };
