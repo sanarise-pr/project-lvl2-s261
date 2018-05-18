@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import genDiff from '../src';
-import { renderJsonLike, renderPlainText } from '../src/renderers';
+import { renderTree, renderPlain } from '../src/renderers';
 
 const buildFixturePath = fileName =>
   path.join(__dirname, '__fixtures__', fileName);
@@ -11,7 +11,7 @@ describe('genDiff', () => {
     let expectedDiff;
 
     beforeAll(() => {
-      const expectedDiffPath = buildFixturePath('expected-json-like');
+      const expectedDiffPath = buildFixturePath('expected-tree');
       expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
     });
 
@@ -45,18 +45,18 @@ describe('genDiff', () => {
       [beforePath, afterPath] = fixtures.map(buildFixturePath);
     });
 
-    it('json-like renderer', () => {
-      const expectedDiffPath = buildFixturePath('expected-json-like');
+    it('tree renderer', () => {
+      const expectedDiffPath = buildFixturePath('expected-tree');
       const expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
 
-      expect(genDiff(beforePath, afterPath, renderJsonLike)).toEqual(expectedDiff);
+      expect(genDiff(beforePath, afterPath, renderTree)).toEqual(expectedDiff);
     });
 
-    it('plain-text renderer', () => {
-      const expectedDiffPath = buildFixturePath('expected-plain-text');
+    it('plain text renderer', () => {
+      const expectedDiffPath = buildFixturePath('expected-plain');
       const expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
 
-      expect(genDiff(beforePath, afterPath, renderPlainText)).toEqual(expectedDiff);
+      expect(genDiff(beforePath, afterPath, renderPlain)).toEqual(expectedDiff);
     });
   });
 

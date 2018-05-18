@@ -1,2 +1,2 @@
-export renderJsonLike from './json-like';
-export renderPlainText from './plain-text';
+export renderTree from './tree';
+export renderPlain from './plain';

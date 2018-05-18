@@ -2,7 +2,7 @@ import fs from 'fs';
 import { extname } from 'path';
 import getParser from './parsers';
 import buildDiffAst from './diff-ast';
-import { renderJsonLike } from './renderers';
+import { renderTree } from './renderers';
 
 const readAndParseSync = (path) => {
   const rawData = fs.readFileSync(path, 'utf-8');
@@ -12,7 +12,7 @@ const readAndParseSync = (path) => {
   return parse(rawData);
 };
 
-const genDiff = (beforePath, afterPath, render = renderJsonLike) => {
+const genDiff = (beforePath, afterPath, render = renderTree) => {
   const before = readAndParseSync(beforePath);
   const after = readAndParseSync(afterPath);
   const ast = buildDiffAst(before, after);

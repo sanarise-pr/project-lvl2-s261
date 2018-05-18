@@ -4,11 +4,11 @@ import commander from 'commander';
 import _ from 'lodash';
 import { version } from '../../package.json';
 import genDiff from '..';
-import { renderJsonLike, renderPlainText } from '../renderers';
+import { renderTree, renderPlain } from '../renderers';
 
 const outputFormats = {
-  json: renderJsonLike,
-  plain: renderPlainText,
+  tree: renderTree,
+  plain: renderPlain,
 };
 
 const processAction = (firstConfig, secondConfig) => {
@@ -22,7 +22,7 @@ const processAction = (firstConfig, secondConfig) => {
 
 commander
   .description('Compares two configuration files and shows a difference.')
-  .option('-f, --format [type]', 'Output format', 'json')
+  .option('-f, --format [type]', 'Output format', 'tree')
   .version(version)
   .arguments('<firstConfig> <secondConfig>')
   .action(processAction)
