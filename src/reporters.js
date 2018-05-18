@@ -1,53 +1,42 @@
 import _ from 'lodash';
 
 const spacer = '  ';
+const makeIndent = level => spacer.repeat(level * 2);
+const makeMarkedIndent = (level, mark) => `${spacer.repeat((level * 2) - 1)}${mark} `;
 
-const stringifyValue = (value, key, prefix) => {
+const stringifyValue = (value, key, deepness, mark) => {
+  const indent = mark ? makeMarkedIndent(deepness, mark) : makeIndent(deepness);
   if (!_.isPlainObject(value)) {
-    return `${prefix}${key}: ${value}`;
+    return `${indent}${key}: ${value}`;
   }
 
   const keys = _.keys(value);
   if (keys.length === 0) {
-    return `${prefix}${key}: {}`;
+    return `${indent}${key}: {}`;
   }
 
-  const nestedStrings = keys.map(k => stringifyValue(value[k], k, spacer));
-  return [`${prefix}${key}: {`, nestedStrings, `${spacer}}`];
+  const nestedStrings = keys.map(k => stringifyValue(value[k], k, deepness + 1));
+  return [`${indent}${key}: {`, nestedStrings.join('\n'), `${makeIndent(deepness)}}`].join('\n');
 };
 
 const reportMapping = {
-  added: ({ key, value }) => stringifyValue(value, key, '+ '),
-  removed: ({ key, value }) => stringifyValue(value, key, '- '),
-  unchanged: ({ key, value }) => stringifyValue(value, key, spacer),
-  changed: ({ key, oldValue, newValue }) =>
-    [].concat(stringifyValue(oldValue, key, '- '), stringifyValue(newValue, key, '+ ')),
-  nested: ({ key, children }, buildStrings) => [`${spacer}${key}: {`, buildStrings(children), `${spacer}}`],
-};
-
-const astToStringTree = (ast) => {
-  const buildStrings = tree =>
-    tree.reduce((acc, node) => acc.concat(reportMapping[node.type](node, buildStrings)), []);
-
-  return ['{', buildStrings(ast), '}'];
-};
-
-const stringTreeToIndentedStrings = (stringTree) => {
-  const iter = (tree, level) => tree.map((el) => {
-    if (el instanceof Array) {
-      return iter(el, level + 1);
-    }
-    const spacerCount = Math.max((level * 2) - 1, 0);
-    return `${spacer.repeat(spacerCount)}${el}`;
-  });
-
-  return _.flattenDeep(iter(stringTree, 0));
+  added: ({ key, value }, deepness) => stringifyValue(value, key, deepness, '+'),
+  removed: ({ key, value }, deepness) => stringifyValue(value, key, deepness, '-'),
+  unchanged: ({ key, value }, deepness) => stringifyValue(value, key, deepness),
+  changed: ({ key, oldValue, newValue }, deepness) =>
+    [stringifyValue(oldValue, key, deepness, '-'), stringifyValue(newValue, key, deepness, '+')],
+  nested: ({ key, children }, deepness, stringifyAst) => {
+    const indent = makeIndent(deepness);
+    return [`${indent}${key}: {`, stringifyAst(children, deepness + 1), `${indent}}`];
+  },
 };
 
 const buildReport = (ast) => {
-  const stringTree = astToStringTree(ast);
-  const strings = stringTreeToIndentedStrings(stringTree);
-  return strings.join('\n');
+  const stringifyAst = (tree, deepness) => {
+    const strings = tree.map(node => reportMapping[node.type](node, deepness, stringifyAst));
+    return _.flatten(strings).join('\n');
+  };
+  return ['{', stringifyAst(ast, 1), '}'].join('\n');
 };
 
 export default buildReport;
