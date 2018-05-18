@@ -1,8 +1,5 @@
 import _ from 'lodash';
 
-const buildIntro = (key, parentPath) =>
-  `Property '${parentPath}${key}' was`;
-
 const stringifyValue = (value) => {
   if (_.isObject(value)) {
     return 'complex value';
@@ -16,11 +13,11 @@ const stringifyValue = (value) => {
 const mapping = {
   unchanged: () => '',
   added: ({ key, value }, parentPath) =>
-    `${buildIntro(key, parentPath)} added with value: ${stringifyValue(value)}`,
+    `Property '${parentPath}${key}' was added with value: ${stringifyValue(value)}`,
   removed: ({ key }, parentPath) =>
-    `${buildIntro(key, parentPath)} removed`,
+    `Property '${parentPath}${key}' was removed`,
   changed: ({ key, oldValue, newValue }, parentPath) =>
-    `${buildIntro(key, parentPath)} updated. From ${stringifyValue(oldValue)} to ${stringifyValue(newValue)}`,
+    `Property '${parentPath}${key}' was updated. From ${stringifyValue(oldValue)} to ${stringifyValue(newValue)}`,
   nested: ({ key, children }, parentPath, stringifyAst) =>
     stringifyAst(children, `${parentPath}${key}.`),
 };
