@@ -19,7 +19,7 @@ const stringifyValue = (value, key, deepness, mark) => {
   return [`${indent}${key}: {`, nestedStrings.join('\n'), `${makeIndent(deepness)}}`].join('\n');
 };
 
-const reportMapping = {
+const mapping = {
   added: ({ key, value }, deepness) => stringifyValue(value, key, deepness, '+'),
   removed: ({ key, value }, deepness) => stringifyValue(value, key, deepness, '-'),
   unchanged: ({ key, value }, deepness) => stringifyValue(value, key, deepness),
@@ -31,12 +31,12 @@ const reportMapping = {
   },
 };
 
-const buildReport = (ast) => {
+const render = (ast) => {
   const stringifyAst = (tree, deepness) => {
-    const strings = tree.map(node => reportMapping[node.type](node, deepness, stringifyAst));
+    const strings = tree.map(node => mapping[node.type](node, deepness, stringifyAst));
     return _.flatten(strings).join('\n');
   };
   return ['{', stringifyAst(ast, 1), '}'].join('\n');
 };
 
-export default buildReport;
+export default render;

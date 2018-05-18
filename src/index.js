@@ -2,7 +2,7 @@ import fs from 'fs';
 import { extname } from 'path';
 import getParser from './parsers';
 import buildDiffAst from './diff-ast';
-import buildReport from './reporters';
+import render from './renderers';
 
 const readAndParseSync = (path) => {
   const rawData = fs.readFileSync(path, 'utf-8');
@@ -17,7 +17,7 @@ const genDiff = (beforePath, afterPath) => {
   const after = readAndParseSync(afterPath);
   const ast = buildDiffAst(before, after);
 
-  return buildReport(ast);
+  return render(ast);
 };
 
 export default genDiff;
