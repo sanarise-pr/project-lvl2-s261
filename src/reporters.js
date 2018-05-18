@@ -1,4 +1,3 @@
-/* eslint no-use-before-define: ["error", { "variables": false }] */
 import _ from 'lodash';
 
 const spacer = '  ';
@@ -17,20 +16,20 @@ const stringifyValue = (value, key, prefix) => {
   return [`${prefix}${key}: {`, nestedStrings, `${spacer}}`];
 };
 
+const reportMapping = {
+  added: ({ key, value }) => stringifyValue(value, key, '+ '),
+  removed: ({ key, value }) => stringifyValue(value, key, '- '),
+  unchanged: ({ key, value }) => stringifyValue(value, key, spacer),
+  changed: ({ key, oldValue, newValue }) =>
+    [].concat(stringifyValue(oldValue, key, '- '), stringifyValue(newValue, key, '+ ')),
+  nested: ({ key, children }, buildStrings) => [`${spacer}${key}: {`, buildStrings(children), `${spacer}}`],
+};
+
 const astToStringTree = (ast) => {
-  const reportMapping = {
-    added: ({ key, value }) => stringifyValue(value, key, '+ '),
-    removed: ({ key, value }) => stringifyValue(value, key, '- '),
-    unchanged: ({ key, value }) => stringifyValue(value, key, spacer),
-    changed: ({ key, oldValue, newValue }) =>
-      [].concat(stringifyValue(oldValue, key, '- '), stringifyValue(newValue, key, '+ ')),
-    nested: ({ key, children }) => [`${spacer}${key}: {`, iter(children), `${spacer}}`],
-  };
+  const buildStrings = tree =>
+    tree.reduce((acc, node) => acc.concat(reportMapping[node.type](node, buildStrings)), []);
 
-  const iter = tree =>
-    tree.reduce((acc, node) => acc.concat(reportMapping[node.type](node)), []);
-
-  return ['{', iter(ast), '}'];
+  return ['{', buildStrings(ast), '}'];
 };
 
 const stringTreeToIndentedStrings = (stringTree) => {

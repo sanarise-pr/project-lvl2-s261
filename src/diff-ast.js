@@ -1,4 +1,3 @@
-/* eslint no-use-before-define: ["error", { "variables": false }] */
 import _ from 'lodash';
 
 const createAstMapping = (before, after) => [
@@ -6,6 +5,7 @@ const createAstMapping = (before, after) => [
     test: key => !_.has(before, key) && _.has(after, key),
     build: key => ({
       type: 'added',
+      key,
       value: after[key],
     }),
   },
@@ -13,13 +13,15 @@ const createAstMapping = (before, after) => [
     test: key => _.has(before, key) && !_.has(after, key),
     build: key => ({
       type: 'removed',
+      key,
       value: before[key],
     }),
   },
   {
     test: key => _.isPlainObject(before[key]) && _.isPlainObject(after[key]),
-    build: key => ({
+    build: (key, buildDiffAst) => ({
       type: 'nested',
+      key,
       children: buildDiffAst(before[key], after[key]),
     }),
   },
@@ -28,6 +30,7 @@ const createAstMapping = (before, after) => [
       _.has(before, key) && _.has(after, key) && before[key] === after[key],
     build: key => ({
       type: 'unchanged',
+      key,
       value: before[key],
     }),
   },
@@ -36,6 +39,7 @@ const createAstMapping = (before, after) => [
       _.has(before, key) && _.has(after, key) && before[key] !== after[key],
     build: key => ({
       type: 'changed',
+      key,
       oldValue: before[key],
       newValue: after[key],
     }),
@@ -48,7 +52,7 @@ const buildDiffAst = (before, after) => {
 
   return keys.map((key) => {
     const mapper = mapping.find(rec => rec.test(key));
-    return { key, ...mapper.build(key) };
+    return mapper.build(key, buildDiffAst);
   });
 };
 
