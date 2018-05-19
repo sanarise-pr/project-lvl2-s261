@@ -1,31 +1,34 @@
 import _ from 'lodash';
 
-const makeJsonRecord = ({ key, type }, path, data) => ({
-  keyPath: `${path}${key}`,
-  status: type,
-  ...data,
-});
+const buildJsonRecord = (node, path) => {
+  const {
+    key, type, oldValue, newValue,
+  } = node;
+  return {
+    keyPath: `${path}${key}`,
+    status: type,
+    newValue,
+    oldValue,
+  };
+};
 
 const mapping = {
   unchanged: () => null,
-  added: (node, parentPath) =>
-    makeJsonRecord(node, parentPath, { newValue: node.value }),
-  removed: (node, parentPath) =>
-    makeJsonRecord(node, parentPath, { oldValue: node.value }),
-  changed: (node, parentPath) =>
-    makeJsonRecord(node, parentPath, { newValue: node.newValue, oldValue: node.oldValue }),
-  nested: ({ key, children }, parentPath, stringifyAst) =>
-    stringifyAst(children, `${parentPath}${key}.`),
+  added: (node, parentPath) => buildJsonRecord(node, parentPath),
+  removed: (node, parentPath) => buildJsonRecord(node, parentPath),
+  changed: (node, parentPath) => buildJsonRecord(node, parentPath),
+  nested: ({ key, children }, parentPath, mapAst) =>
+    mapAst(children, `${parentPath}${key}.`),
 };
 
 const render = (ast) => {
-  const stringifyAst = (tree, parentPath) => {
+  const mapAst = (tree, parentPath) => {
     const recs = tree
-      .map(node => mapping[node.type](node, parentPath, stringifyAst))
+      .map(node => mapping[node.type](node, parentPath, mapAst))
       .filter(el => el !== null);
     return _.flatten(recs);
   };
-  return JSON.stringify(stringifyAst(ast, ''), null, 2);
+  return JSON.stringify(mapAst(ast, ''));
 };
 
 export default render;

@@ -20,9 +20,9 @@ const stringifyValue = (value, key, deepness, mark) => {
 };
 
 const mapping = {
-  added: ({ key, value }, deepness) => stringifyValue(value, key, deepness, '+'),
-  removed: ({ key, value }, deepness) => stringifyValue(value, key, deepness, '-'),
-  unchanged: ({ key, value }, deepness) => stringifyValue(value, key, deepness),
+  added: ({ key, newValue }, deepness) => stringifyValue(newValue, key, deepness, '+'),
+  removed: ({ key, oldValue }, deepness) => stringifyValue(oldValue, key, deepness, '-'),
+  unchanged: ({ key, oldValue }, deepness) => stringifyValue(oldValue, key, deepness),
   changed: ({ key, oldValue, newValue }, deepness) =>
     [stringifyValue(oldValue, key, deepness, '-'), stringifyValue(newValue, key, deepness, '+')],
   nested: ({ key, children }, deepness, stringifyAst) => {

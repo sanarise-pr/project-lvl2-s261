@@ -6,7 +6,7 @@ const createAstMapping = (before, after) => [
     build: key => ({
       type: 'added',
       key,
-      value: after[key],
+      newValue: after[key],
     }),
   },
   {
@@ -14,7 +14,7 @@ const createAstMapping = (before, after) => [
     build: key => ({
       type: 'removed',
       key,
-      value: before[key],
+      oldValue: before[key],
     }),
   },
   {
@@ -31,7 +31,8 @@ const createAstMapping = (before, after) => [
     build: key => ({
       type: 'unchanged',
       key,
-      value: before[key],
+      oldValue: before[key],
+      newValue: after[key],
     }),
   },
   {

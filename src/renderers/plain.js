@@ -12,8 +12,8 @@ const stringifyValue = (value) => {
 
 const mapping = {
   unchanged: () => '',
-  added: ({ key, value }, parentPath) =>
-    `Property '${parentPath}${key}' was added with value: ${stringifyValue(value)}`,
+  added: ({ key, newValue }, parentPath) =>
+    `Property '${parentPath}${key}' was added with value: ${stringifyValue(newValue)}`,
   removed: ({ key }, parentPath) =>
     `Property '${parentPath}${key}' was removed`,
   changed: ({ key, oldValue, newValue }, parentPath) =>
