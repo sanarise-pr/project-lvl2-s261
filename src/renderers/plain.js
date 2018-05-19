@@ -11,7 +11,6 @@ const stringifyValue = (value) => {
 };
 
 const mapping = {
-  unchanged: () => '',
   added: ({ key, newValue }, parentPath) =>
     `Property '${parentPath}${key}' was added with value: ${stringifyValue(newValue)}`,
   removed: ({ key }, parentPath) =>
@@ -25,8 +24,8 @@ const mapping = {
 const render = (ast) => {
   const stringifyAst = (tree, parentPath) => {
     const strings = tree
-      .map(node => mapping[node.type](node, parentPath, stringifyAst))
-      .filter(el => el !== '');
+      .filter(({ type }) => type !== 'unchanged')
+      .map(node => mapping[node.type](node, parentPath, stringifyAst));
     return _.flatten(strings);
   };
   return stringifyAst(ast, '').join('\n');

@@ -13,7 +13,6 @@ const buildJsonRecord = (node, path) => {
 };
 
 const mapping = {
-  unchanged: () => null,
   added: (node, parentPath) => buildJsonRecord(node, parentPath),
   removed: (node, parentPath) => buildJsonRecord(node, parentPath),
   changed: (node, parentPath) => buildJsonRecord(node, parentPath),
@@ -24,8 +23,8 @@ const mapping = {
 const render = (ast) => {
   const mapAst = (tree, parentPath) => {
     const recs = tree
-      .map(node => mapping[node.type](node, parentPath, mapAst))
-      .filter(el => el !== null);
+      .filter(({ type }) => type !== 'unchanged')
+      .map(node => mapping[node.type](node, parentPath, mapAst));
     return _.flatten(recs);
   };
   return JSON.stringify(mapAst(ast, ''));
