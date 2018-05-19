@@ -4,11 +4,12 @@ import commander from 'commander';
 import _ from 'lodash';
 import { version } from '../../package.json';
 import genDiff from '..';
-import { renderTree, renderPlain } from '../renderers';
+import { renderTree, renderPlain, renderJson } from '../renderers';
 
 const outputFormats = {
   tree: renderTree,
   plain: renderPlain,
+  json: renderJson,
 };
 
 const processAction = (firstConfig, secondConfig) => {

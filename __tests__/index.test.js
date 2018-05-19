@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import genDiff from '../src';
-import { renderTree, renderPlain } from '../src/renderers';
+import { renderTree, renderPlain, renderJson } from '../src/renderers';
 
 const buildFixturePath = fileName =>
   path.join(__dirname, '__fixtures__', fileName);
@@ -57,6 +57,13 @@ describe('genDiff', () => {
       const expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
 
       expect(genDiff(beforePath, afterPath, renderPlain)).toEqual(expectedDiff);
+    });
+
+    it('json renderer', () => {
+      const expectedDiffPath = buildFixturePath('expected-json');
+      const expectedDiff = fs.readFileSync(expectedDiffPath, 'utf-8').trim();
+
+      expect(genDiff(beforePath, afterPath, renderJson)).toEqual(expectedDiff);
     });
   });
 
